@@ -1,29 +1,35 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import routes from './routes/soccerRoutes'
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import routes from './routes/soccerRoutes';
+import dotenv from 'dotenv';
 
-const app = express()
-const PORT = 4000
+dotenv.config();
 
-// mongo connection
-mongoose.Promise = global.Promise
-mongoose.connect('mongobb://localhost/soccerDB')
+const app = express();
+const PORT = 4000;
 
-// bodyparser
-app.use(bodyParser.urlencoded({ extended: true}))
-app.use(bodyParser.json())
+// MongoDB connection
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
-// Cors
-app.use(cors())
+// Body parser setup
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// routes(app)
+// CORS setup
+app.use(cors());
+
+routes(app);
 
 app.get('/', (req, res) => {
-    res.send(`Our app is running on ${PORT}`)
-})
+    res.send(`Our app is running on ${PORT}`);
+});
 
 app.listen(PORT, () => {
-    console.log(`The server is running on ${PORT}`)
-})
+    console.log(`The server is running on ${PORT}`);
+});
